@@ -1,12 +1,47 @@
+import { useRouter } from "expo-router";
 import { ChevronUp } from "lucide-react-native";
-import {
-    ImageBackground,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
-} from "react-native";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 export default function Welcome() {
+  const offset = useSharedValue({ y: 0 });
+
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: offset.value.y }],
+  }));
+  const router = useRouter()
+  const navigateToHome = ()=>{
+      router.push("/home")
+  }
+
+  const panGesture = Gesture.Pan()
+    .onUpdate((e) => {
+      const maxUp = -100;
+      const maxDown = 0;
+    
+      offset.value = {
+        y: Math.min(Math.max(e.translationY, maxUp), maxDown),
+      };
+
+
+    })
+    .onEnd((e) => {
+      const maxDown = 0;
+      const maxUp = -100;
+
+      offset.value = withSpring({ y: 0 }, { mass: 1,stiffness:300,damping:17 });
+        const maxOffsetY =  Math.min(Math.max(e.translationY, maxUp), maxDown)
+         if(maxOffsetY=== maxUp){
+          scheduleOnRN(navigateToHome) 
+      }
+    });
+
   return (
     <ImageBackground
       source={require("../assets/images/bg.jpg")}
@@ -20,11 +55,13 @@ export default function Welcome() {
           </Text>
         </View>
         <View>
-          <View style={styles.btnContainer}>
+          <View style={[styles.btnContainer]}>
             <ChevronUp color="#fff" size={48} />
-            <Pressable style={styles.btn}>
-              <Text style={styles.txt}>Go</Text>
-            </Pressable>
+            <GestureDetector gesture={panGesture}>
+              <Animated.View style={[styles.btn, animatedStyle]}>
+                <Text style={styles.txt}>Go</Text>
+              </Animated.View>
+            </GestureDetector>
           </View>
         </View>
       </View>
@@ -63,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 100,
     paddingBottom: 10,
-    gap:45
+    gap: 45,
   },
   btn: {
     width: 80,
