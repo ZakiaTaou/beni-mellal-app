@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    fontSize: 26,
+    fontSize: 25,
     fontWeight: "bold",
     color: "#443818",
-    marginBottom: 20,
+    marginVertical: 30,
   },
   card: {
     width: 370,

@@ -22,7 +22,7 @@ export default function Details() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Image source={image} style={styles.image} />
-      <TouchableOpacity  onPress={()=>router.back()} style={styles.iconBack}>
+      <TouchableOpacity onPress={() => router.back()} style={styles.iconBack}>
         <MoveLeft size={30} color="#fff" />
       </TouchableOpacity>
 
@@ -31,7 +31,15 @@ export default function Details() {
           <Heart size={30} color="#fff" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.galleryButton}>
+        <TouchableOpacity
+          style={styles.galleryButton}
+          onPress={() =>
+            router.push({
+              pathname: "/details/gallery",
+              params: { image: image },
+            })
+          }
+        >
           <Images size={30} color="#fff" />
           <Text style={styles.galleryText}>View Gallery</Text>
         </TouchableOpacity>
@@ -93,10 +101,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
-  iconBack:{
-    position:"absolute",
-    top:50,
-    left:15,
+  iconBack: {
+    position: "absolute",
+    top: 50,
+    left: 15,
     width: 40,
     height: 40,
     backgroundColor: "rgba(68,56,24,0.5)",
