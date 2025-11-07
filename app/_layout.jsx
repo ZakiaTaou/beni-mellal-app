@@ -8,7 +8,10 @@ export default function RootLayout() {
         screenOptions={{
           headerShown: false,
         }}
-      />
+      >
+        <Stack.Screen name="index"/>
+        <Stack.Screen name="home" options={{animation:"slide_from_bottom"}}/>
+      </Stack>
     </GestureHandlerRootView>
   );
 }

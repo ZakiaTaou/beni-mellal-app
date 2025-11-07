@@ -10,14 +10,12 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 export default function Welcome() {
   const offset = useSharedValue({ y: 0 });
-
-
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: offset.value.y }],
   }));
   const router = useRouter()
   const navigateToHome = ()=>{
-      router.push("/home")
+      router.push("home")
   }
 
   const panGesture = Gesture.Pan()
