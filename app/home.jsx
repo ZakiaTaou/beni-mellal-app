@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { router } from "expo-router";
 import {
     FlatList,
     Image,
@@ -48,7 +48,6 @@ const attractions = [
 ];
 
 export default function HomeScreen() {
-  const router = useRouter();
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Explore Beni Mellal</Text>
@@ -57,7 +56,12 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => router.push("details/[id]")}
+            onPress={() =>
+                router.push({
+                  pathname: "details/${item.id}",
+                  params: { image: item.image},
+                })
+              }
             style={styles.card}
           >
             <Image source={item.image} style={styles.image} />
@@ -93,13 +97,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     overflow: "hidden",
     backgroundColor: "#f9f9f9",
-    shadowColor: "#ff0000ff",
+    shadowColor: "#f3ba1fff",
     shadowOffset: {
       width: 0,
       height: 5,
     },
     shadowOpacity: 0.36,
-    // shadowRadius: 6.68,
+    shadowRadius: 6.68,
 
     elevation: 5,
 

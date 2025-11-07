@@ -11,6 +11,7 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index"/>
         <Stack.Screen name="home" options={{animation:"slide_from_bottom"}}/>
+        <Stack.Screen name="details/[id]" options={{animation:"slide_from_right"}}/>
       </Stack>
     </GestureHandlerRootView>
   );
