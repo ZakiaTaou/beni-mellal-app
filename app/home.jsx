@@ -1,73 +1,38 @@
 import { router } from "expo-router";
+import { useEffect } from "react";
 import {
-    FlatList,
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-
-const attractions = [
-  {
-    id: "1",
-    title: "Lac Bin El Ouidane",
-    description: "A stunning man-made lake with azure waters",
-    image: require("../assets/images/binelouidane.jpg"),
-  },
-  {
-    id: "2",
-    title: "Cascades d’Ouzoud",
-    description: "Morocco’s most spectacular waterfalls",
-    image: require("../assets/images/ouzoud.jpg"),
-  },
-  {
-    id: "3",
-    title: "Kasbah Ras El Ain",
-    description: "An ancient fortress overlooking the city",
-    image: require("../assets/images/kasbah.jpg"),
-  },
-  {
-    id: "4",
-    title: "Kasbah Ras El Ain",
-    description: "An ancient fortress overlooking the city",
-    image: require("../assets/images/binelouidane.jpg"),
-  },
-  {
-    id: "5",
-    title: "Kasbah Ras El Ain",
-    description: "An ancient fortress overlooking the city",
-    image: require("../assets/images/ouzoud.jpg"),
-  },
-  {
-    id: "6",
-    title: "Kasbah Ras El Ain",
-    description: "An ancient fortress overlooking the city",
-    image: require("../assets/images/kasbah.jpg"),
-  },
-];
+import { useAttractionsStore } from "../store/attractionsStore";
 
 export default function HomeScreen() {
+  const { attractions, getAttractions } = useAttractionsStore();
+
+  useEffect(() => {
+    getAttractions();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Explore Beni Mellal</Text>
+
       <FlatList
         data={attractions}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() =>
-                router.push({
-                  pathname: "details/${item.id}",
-                  params: { image: item.image},
-                })
-              }
+            onPress={() => router.push(`details/${item.id}`)}
             style={styles.card}
           >
-            <Image source={item.image} style={styles.image} />
+            <Image source={{ uri: item.thumbnail }} style={styles.image} />
             <View style={styles.infoBox}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.description}>{item.description}</Text>
+              <Text style={styles.title}>{item.name}</Text>
+              <Text style={styles.description}>{item.shortDescription}</Text>
             </View>
           </Pressable>
         )}
@@ -98,16 +63,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#f9f9f9",
     shadowColor: "#f3ba1fff",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
+    shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.36,
     shadowRadius: 6.68,
-
     elevation: 5,
-
-  
   },
   image: {
     width: "100%",

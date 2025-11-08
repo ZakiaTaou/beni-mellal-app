@@ -15,13 +15,17 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useAttractionsStore } from "../../store/attractionsStore";
 
 export default function Details() {
-  const { image } = useLocalSearchParams();
+  const { id } = useLocalSearchParams();
+  const { attractions } = useAttractionsStore();
+
+  const attraction = attractions.find((a) => a.id.toString() === id);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Image source={image} style={styles.image} />
+    <ScrollView style={styles.container}>
+      <Image source={{ uri: attraction.thumbnail }} style={styles.image} />
       <TouchableOpacity onPress={() => router.back()} style={styles.iconBack}>
         <MoveLeft size={30} color="#fff" />
       </TouchableOpacity>
@@ -33,12 +37,7 @@ export default function Details() {
 
         <TouchableOpacity
           style={styles.galleryButton}
-          onPress={() =>
-            router.push({
-              pathname: "/details/gallery",
-              params: { image: image },
-            })
-          }
+          onPress={() => router.push(`/details/gallery?id=${attraction.id}`)}
         >
           <Images size={30} color="#fff" />
           <Text style={styles.galleryText}>View Gallery</Text>
@@ -47,14 +46,7 @@ export default function Details() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Description</Text>
-        <Text style={styles.descriptionText}>
-          {" "}
-          Les cascades d’Ouzoud sont parmi les plus hautes et les plus
-          spectaculaires du Maroc, avec une chute d’eau de 110 mètres. Situées à
-          environ 150 km au nord-est de Marrakech, elles offrent un paysage
-          naturel époustouflant avec des singes magots vivant librement dans la
-          région.
-        </Text>
+        <Text>{attraction.longDescription}</Text>
       </View>
 
       <View style={styles.section}>
@@ -64,7 +56,7 @@ export default function Details() {
           <ChartBarStacked size={30} color="#443818" />
           <View>
             <Text style={styles.infoTitle}>Type</Text>
-            <Text style={styles.infoValue}>Natural Landmark</Text>
+            <Text style={styles.infoValue}>{attraction.type}</Text>
           </View>
         </View>
 
@@ -72,7 +64,7 @@ export default function Details() {
           <CalendarCheck size={30} color="#443818" />
           <View>
             <Text style={styles.infoTitle}>Best Time to Visit</Text>
-            <Text style={styles.infoValue}>March to May</Text>
+            <Text style={styles.infoValue}>{attraction.bestTimeToVisit}</Text>
           </View>
         </View>
 
@@ -80,9 +72,7 @@ export default function Details() {
           <Binoculars size={30} color="#443818" />
           <View>
             <Text style={styles.infoTitle}>Activities</Text>
-            <Text style={styles.infoValue}>
-              Hiking, boat trip, wildlife viewing
-            </Text>
+            <Text style={styles.infoValue}>{attraction.activities}</Text>
           </View>
         </View>
       </View>
@@ -171,7 +161,7 @@ const styles = StyleSheet.create({
     color: "#443818",
   },
   infoValue: {
-    fontSize: 15,
+    fontSize: 13,
     color: "#443818",
   },
 });

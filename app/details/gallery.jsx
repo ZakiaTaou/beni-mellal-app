@@ -2,32 +2,33 @@ import { router, useLocalSearchParams } from "expo-router";
 import { MoveLeft } from "lucide-react-native";
 import { useState } from "react";
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { useAttractionsStore } from "../../store/attractionsStore";
 
 const { width } = Dimensions.get("window");
 
-export default function gallery() {
-  const { image } = useLocalSearchParams();
-
+export default function Gallery() {
+  
   const [activeIndex, setActiveIndex] = useState(0);
+  const { id } = useLocalSearchParams(); 
+  const { attractions } = useAttractionsStore();
+  const attraction = attractions.find((a) => a.id.toString() === id);
+  const images= attraction.images;
 
-  const images = [
-    require("../../assets/images/ouzoud.jpg"),
-    require("../../assets/images/kasbah.jpg"),
-    require("../../assets/images/binelouidane.jpg"),
-  ];
+
 
   const handleScroll = (event) => {
     const slide = Math.round(event.nativeEvent.contentOffset.x / width);
     setActiveIndex(slide);
   };
+
 
   return (
     <View style={styles.container}>
@@ -40,7 +41,7 @@ export default function gallery() {
         images.length
       }`}</Text>
        <Image
-        source={image}
+        source={{ uri: attraction.thumbnail }}
         style={styles.background}
       />
         
@@ -53,10 +54,11 @@ export default function gallery() {
         onScroll={handleScroll}
         renderItem={({ item }) => (
           <View style={styles.imageWrapper}>
-            <Image source={item} style={styles.image} />
+            <Image source={{ uri: item }} style={styles.image} />
           </View>
         )}
       />
+
 
       <View style={styles.dotsContainer}>
         {images.map((_, index) => (
